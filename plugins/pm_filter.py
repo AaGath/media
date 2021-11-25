@@ -79,16 +79,14 @@ async def filter(client, message):
             )
             if BUTTON:
                 buttons.append([InlineKeyboardButton(text="Close ❌",callback_data="close")])
-            poster=None
-            if API_KEY:
-                poster=await get_poster(search)
-            if poster:
-                await message.reply_photo(photo=poster, caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> <b>{imdb.get('runtime')}</b>\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')} / 10\n🗳️</b> <b>𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(buttons))
-
-            else:
-                await message.reply_text(f"<b>Here is What I Found In My Database For Your Query {search} ‌‌‌‌‎ ­  ­  ­  ­  ­  </b>", reply_markup=InlineKeyboardMarkup(buttons))
-            return
-
+            imdb = await get_poster(search) if IMDB else None
+        if imdb and imdb.get('poster'):
+            await message.reply_photo(photo=imdb.get('poster'), caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> <b>{imdb.get('runtime')}</b>\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')} / 10\n🗳️</b> <b>𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(btn))
+        elif imdb:
+            await message.reply_photo(photo="https://telegra.ph/file/1f683fdda7e6cd6064926.jpg", caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> {imdb.get('runtimes')}\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')}</b> / 10\n<b>🗳️ 𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(btn))
+        else:
+            await message.reply_text(f"<b>Here is What I Found In My Database For Your Query {search} ‌‎ </b>", reply_markup=InlineKeyboardMarkup(btn))
+        
         data = BUTTONS[keyword]
         buttons = data['buttons'][0].copy()
 
@@ -100,13 +98,13 @@ async def filter(client, message):
         )
         if BUTTON:
             buttons.append([InlineKeyboardButton(text="Close ❌",callback_data="close")])
-        poster=None
-        if API_KEY:
-            poster=await get_poster(search)
-        if poster:
-            await message.reply_photo(photo=poster, caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> <b>{imdb.get('runtime')}</b>\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')} / 10\n🗳️</b> <b>𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(buttons))
+        imdb = await get_poster(search) if IMDB else None
+        if imdb and imdb.get('poster'):
+            await message.reply_photo(photo=imdb.get('poster'), caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> <b>{imdb.get('runtime')}</b>\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')} / 10\n🗳️</b> <b>𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(btn))
+        elif imdb:
+            await message.reply_photo(photo="https://telegra.ph/file/1f683fdda7e6cd6064926.jpg", caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> {imdb.get('runtimes')}\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')}</b> / 10\n<b>🗳️ 𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(btn))
         else:
-            await message.reply_text(f"<b>Here is What I Found In My Database For Your Query {search} ‌‌‌‌‎ ­  ­  ­  ­  ­  </b>", reply_markup=InlineKeyboardMarkup(buttons))
+            await message.reply_text(f"<b>Here is What I Found In My Database For Your Query {search} ‌‎ </b>", reply_markup=InlineKeyboardMarkup(btn))
 
 @Client.on_message(filters.text & filters.group & filters.incoming & filters.chat(AUTH_GROUPS) if AUTH_GROUPS else filters.text & filters.group & filters.incoming)
 async def group(client, message):
@@ -147,14 +145,14 @@ async def group(client, message):
             )
             if BUTTON:
                 buttons.append([InlineKeyboardButton(text="Close ❌",callback_data="close")])
-            poster=None
-            if API_KEY:
-                poster=await get_poster(search)
-            if poster:
-                await message.reply_photo(photo=poster, caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> <b>{imdb.get('runtime')}</b>\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')} / 10\n🗳️</b> <b>𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(buttons))
-            else:
-                await message.reply_text(f"<b>Here is What I Found In My Database For Your Query {search} ‌‌‌‌‎ ­  ­  ­  ­  ­  </b>", reply_markup=InlineKeyboardMarkup(buttons))
-            return
+            imdb = await get_poster(search) if IMDB else None
+        if imdb and imdb.get('poster'):
+            await message.reply_photo(photo=imdb.get('poster'), caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> <b>{imdb.get('runtime')}</b>\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')} / 10\n🗳️</b> <b>𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(btn))
+        elif imdb:
+            await message.reply_photo(photo="https://telegra.ph/file/1f683fdda7e6cd6064926.jpg", caption=f"<b>📀 𝖳𝗂𝗍𝗅𝖾:</b> <b>{imdb.get('title')}</b>\n\n<b>⏱️ 𝖱𝗎𝗇𝗍𝗂𝗆𝖾:</b> {imdb.get('runtimes')}\n<b>🌟 𝖱𝖺𝗍𝗂𝗇𝗀:</b> <b>{imdb.get('rating')}</b> / 10\n<b>🗳️ 𝖵𝗈𝗍𝖾𝗌:</b> <b>{imdb.get('votes')}</b>\n\n<b>📆 𝖱𝖾𝗅𝖾𝖺𝗌𝖾:</b> <b>{imdb.get('year')}</b>\n<b>🎭 𝖦𝖾𝗇𝗋𝖾:</b> <b>{imdb.get('genres')}</b>\n<b>🎙 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾:</b> <b>{imdb.get('languages')}</b>\n<b>🌐 𝖢𝗈𝗎𝗇𝗍𝗋𝗒:</b> <b>{imdb.get('countries')}</b>\n<b>✍️ 𝖣𝗂𝗋𝖾𝖼𝗍𝗈𝗋:</b> <b>{imdb.get('director')}</b>\n<b>👥 Cast :</b> <b>{imdb.get('cast')}</b>\n<b>🗣️ Requested BY</b> <b>{message.from_user.mention}</b>\n\n<b>© PrimeFlix | Movies</b>", reply_markup=InlineKeyboardMarkup(btn))
+        else:
+            await message.reply_text(f"<b>Here is What I Found In My Database For Your Query {search} ‌‎ </b>", reply_markup=InlineKeyboardMarkup(btn))
+
 
         data = BUTTONS[keyword]
         buttons = data['buttons'][0].copy()
