@@ -1,6 +1,7 @@
 import re
 import base64
 import logging
+from imdb import IMDb
 from struct import pack
 from pyrogram.errors import UserNotParticipant
 from pyrogram.file_id import FileId
